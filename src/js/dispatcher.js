@@ -1,0 +1,1 @@
+var a = module.exports = 1;

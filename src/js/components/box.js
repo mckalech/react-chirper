@@ -1,3 +1,4 @@
+var css = require("../../styles/styles.scss"); 
 var React = require('react');
 
 var Box = React.createClass({
