@@ -1,6 +1,7 @@
 var assign = require('object-assign');
-var EventEmitterProto = require('event').EventEmitter.prototype;
+var EventEmitterProto = require('events').EventEmitter.prototype;
 var CHANGE_EVENT = "CHANGE";
+var dispatcher = require('../dispatcher');
 
 
 var storeMethods = {
@@ -48,10 +49,10 @@ exports.extend = function(methods) {
 
 	assign(store, EventEmitterProto, storeMethods, methods)
 	store.init();
-	require('../dispatcher').register(function(action){
+	dispatcher.register(function(action){
 		if(store.actions[action.actionType]){
 			store.actions[action.actionType].forEach(function(fn){
-				fn.call(null, action.data)
+				fn.call(store, action.data)
 			});
 		}
 	});

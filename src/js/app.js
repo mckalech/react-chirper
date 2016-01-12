@@ -12,4 +12,7 @@
 // 	document.getElementById('content')
 // );
 
-var actions = require('./actions');
+var API = require('./api');
+var ChirpsStore = require('./stores/chirps');
+
+API.fetchChirps();
