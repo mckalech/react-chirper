@@ -8,7 +8,33 @@ body{
 }
 
 #content{
-	width: 600px;
-	margin: 50px auto;
+
 	
+}
+
+.b-chirpbox{
+	list-style-type: none;
+	padding: 6px;
+	border: 1px solid #d1d1d1;
+	border-radius: 4px;
+
+	p{
+		margin-bottom: 0;
+	}
+
+	&__timestamp{
+		color:#d1d1d1;
+	}
+	img {
+    	display: none;
+	}
+
+	@media (min-width: 550px) {
+	    img {
+	        display: block;
+	        border-radius: 4px;
+	        width: 100%;
+	    }
+	}
+
 }

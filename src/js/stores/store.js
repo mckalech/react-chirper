@@ -9,7 +9,7 @@ var storeMethods = {
 	set: function(arr){
 		var curIds = this._data.map(function(m){ return m.cid; });
 		arr.filter(function(item){
-			curIds.indexOf(item.cid) === -1;
+			return curIds.indexOf(item.cid) === -1;
 		}).forEach(this.add.bind(this));
 	},
 	add:function(item){
@@ -30,7 +30,7 @@ var storeMethods = {
 		this.removeListener(CHANGE_EVENT, fn);
 	},
 	emitChange: function(){
-		thit.emit(CHANGE_EVENT);
+		this.emit(CHANGE_EVENT);
 	},
 	bind: function(actionType, actionFn){
 
@@ -53,6 +53,7 @@ exports.extend = function(methods) {
 		if(store.actions[action.actionType]){
 			store.actions[action.actionType].forEach(function(fn){
 				fn.call(store, action.data)
+				store.emitChange();
 			});
 		}
 	});

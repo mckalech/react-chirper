@@ -1,17 +1,36 @@
 var React = require('react');
-var API = require('../api');
 var ChirpInput = require('./chirpInput');
+var ChirpsList= require('./chirpsList');
 var actions = require('../actions');
+var ChirpsStore = require('../stores/chirps');
+
 
 var Feed = React.createClass({
+	getInitialState:function(){
+		return {
+			chirps: ChirpsStore.all()
+		}
+	},
+	componentWillInmount: function(){
+		ChirpsStore.removeChangeListener(this.onChange);
+	},
 	componentDidMount:function(){
-		API.fetchChirps();
+		ChirpsStore.addChangeListener(this.onChange);
+		
+	},
+	onChange:function(){
+		if(this.isMounted()){
+			this.setState({
+				chirps: ChirpsStore.all()
+			})
+		}
+		
 	},
 	render : function(){
 		return (
 			<div>
 				<ChirpInput onSave={this.saveChirp}/>
-				<div>a lot of feed texts</div>
+				<ChirpsList chirps={this.state.chirps}/>
 			</div>
 		)
 	},
