@@ -13,7 +13,11 @@ var Box = React.createClass({
                     <div className='three columns'>
                         <Link to="/">Feed</Link>
                         <br />
+						<Link to="/users">Users</Link>
+	                    <br />
 						<Link to="/about">About</Link>
+	                    <br />
+						<a href='/logout'>Logout</a>
                     </div>
 
                     <div className='nine columns'>

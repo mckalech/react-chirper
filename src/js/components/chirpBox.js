@@ -1,28 +1,32 @@
 var React = require('react');
-var moment = require('moment');
 var utils = require('../utils');
 var Link = require('react-router').Link;
 
 var ChirpBox = React.createClass({
 	render : function(){
-		var c = this.props.chirp;
+		var user = this.props.user;
+		var timestamp = this.props.timestamp ?
+            ' ' + String.fromCharCode(8226) + ' ' + this.props.timestamp :
+            '';
+		var id = (typeof user.userId === 'number') ? user.userId : user.cid;
+
 		return (
 			<li className="b-chirpbox row">
-				<Link className="two columns" to={'/user/'+c.userId} params={{ id: c.userId}}>
-					<img src={utils.avatar(c.email)} />
+				<Link className="two columns" to={'/user/'+user.userId}>
+					<img src={utils.avatar(user.email)} />
 				</Link>
 				<div className="ten columns">
 					<p>
-						<strong>{c.fullname}</strong>
+						<strong>{user.fullname}</strong>
 						<span className="b-chirpbox__timestamp">
-							@{c.username} {moment(c.$created).fromNow()}
+							@{user.username} {timestamp}
 						</span>
 					</p>
-					<p>{c.text}</p>	
+					<p>{this.props.children}</p>
 				</div>
 			</li>
 		)
-	},
+	}
 });
 
 module.exports = ChirpBox;

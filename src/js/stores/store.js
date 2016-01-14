@@ -20,7 +20,7 @@ var storeMethods = {
 	},
 	get:function(id){
 		return this._data.filter(function(item){
-			item.cid === id;
+			return item.cid === id;
 		})[0];
 	},
 	addChangeListener: function(fn){
@@ -45,23 +45,21 @@ exports.extend = function(methods) {
 	var store = {
 		_data: [],
 		actions: {}
-	}
+	};
 
-	assign(store, EventEmitterProto, storeMethods, methods)
+	assign(store, EventEmitterProto, storeMethods, methods);
 	store.init();
 	dispatcher.register(function(action){
 		if(store.actions[action.actionType]){
 			store.actions[action.actionType].forEach(function(fn){
-				fn.call(store, action.data)
+				fn.call(store, action.data);
 				store.emitChange();
 			});
 		}
 	});
 
 	return store;
-
-
-}
+};
 
 
 
