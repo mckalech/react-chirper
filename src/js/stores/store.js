@@ -11,13 +11,20 @@ var storeMethods = {
 		arr.filter(function(item){
 			return curIds.indexOf(item.cid) === -1;
 		}).forEach(this.add.bind(this));
+		this.sort();
 	},
 	add:function(item){
 		this._data.push(item);
+		this.sort();
 	},
 	all: function(){
 		return this._data;
 	},
+	sort: function () {
+        this._data.sort(function (a, b) {
+            return +new Date(b.$created) - +new Date(a.$created);
+        });
+    },
 	get:function(id){
 		return this._data.filter(function(item){
 			return item.cid === id;

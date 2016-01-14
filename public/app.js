@@ -24711,7 +24711,7 @@
 	var Feed = React.createClass({displayName: "Feed",
 		getInitialState:function(){
 			return {
-				chirps: ChirpsStore.all()
+				chirps: ChirpsStore.timeline()
 			}
 		},
 		componentWillInmount: function(){
@@ -24723,9 +24723,7 @@
 		},
 		onChange:function(){
 			if(this.isMounted()){
-				this.setState({
-					chirps: ChirpsStore.all()
-				})
+				this.setState(this.getInitialState());
 			}
 			
 		},
@@ -42073,6 +42071,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var constants = __webpack_require__(349);
+	var UsersStore = __webpack_require__(356);
 
 	var ChirpStore = module.exports = __webpack_require__(351).extend({
 		init: function(){
@@ -42080,6 +42079,12 @@
 			this.bind(constants.CHIRPED, function(data){
 				this.add(data);
 			});
+		},
+		timeline: function(){
+			var ids = [UsersStore.currentUser.cid].concat(UsersStore.currentUser.following);
+			return this._data.filter(function(chirp){
+				return ids.indexOf(chirp.userId) >= 0;
+			})
 		}
 	});
 
@@ -42100,13 +42105,20 @@
 			arr.filter(function(item){
 				return curIds.indexOf(item.cid) === -1;
 			}).forEach(this.add.bind(this));
+			this.sort();
 		},
 		add:function(item){
 			this._data.push(item);
+			this.sort();
 		},
 		all: function(){
 			return this._data;
 		},
+		sort: function () {
+	        this._data.sort(function (a, b) {
+	            return +new Date(b.$created) - +new Date(a.$created);
+	        });
+	    },
 		get:function(id){
 			return this._data.filter(function(item){
 				return item.cid === id;

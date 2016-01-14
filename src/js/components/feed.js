@@ -8,7 +8,7 @@ var ChirpsStore = require('../stores/chirps');
 var Feed = React.createClass({
 	getInitialState:function(){
 		return {
-			chirps: ChirpsStore.all()
+			chirps: ChirpsStore.timeline()
 		}
 	},
 	componentWillInmount: function(){
@@ -20,9 +20,7 @@ var Feed = React.createClass({
 	},
 	onChange:function(){
 		if(this.isMounted()){
-			this.setState({
-				chirps: ChirpsStore.all()
-			})
+			this.setState(this.getInitialState());
 		}
 		
 	},
