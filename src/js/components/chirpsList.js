@@ -23,7 +23,7 @@ var ChirpsList = React.createClass({
 				{items}
 			</ul>
 		)
-	},
+	}
 });
 
 module.exports = ChirpsList;

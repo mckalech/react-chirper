@@ -4,6 +4,7 @@ var UsersStore = require('../stores/users');
 var Link = require('react-router').Link;
 var utils = require('../utils');
 var ChirpBox = require('./chirpBox');
+var FollowButton = require('./followButton');
 
 
 var UsersList = React.createClass({
@@ -30,7 +31,11 @@ var UsersList = React.createClass({
 			return user.cid !== this.state.user.cid;
 
 		}.bind(this)).map(function(user){
-			return <ChirpBox user={user} key={user.cid}>buttons</ChirpBox>
+			return (
+				<ChirpBox user={user} key={user.cid}>
+					<FollowButton userId={user.cid}/>
+				</ChirpBox>
+			)
 		});
 		return (
 			<ul className="b-userslist row">

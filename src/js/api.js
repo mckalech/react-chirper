@@ -15,8 +15,19 @@ var API = module.exports = {
 		post('/api/chirps', {text: text}).then(function(data){
 			actions.chirped(data);
 		});
+	},
+	follow: function(userId){
+		post('/api/follow/'+userId).then(function(data){
+			actions.followed(data);
+		});
+
+	},
+	unfollow: function(userId){
+		post('/api/unfollow/'+userId).then(function(data){
+			actions.unfollowed(data);
+		});
 	}
-}
+};
 
 function get(url){
 	return fetch(url,{
@@ -47,5 +58,13 @@ dispatcher.register(function(action){
 		case constants.CHIRP:
 			API.saveChirp(action.data);
 			break;
+
+		case constants.FOLLOW:
+			API.follow(action.data);
+			break;
+
+		case constants.UNFOLLOW:
+			API.unfollow(action.data);
+			break;
 	}
-})
+});

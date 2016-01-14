@@ -25044,7 +25044,7 @@
 					items
 				)
 			)
-		},
+		}
 	});
 
 	module.exports = ChirpsList;
@@ -42531,6 +42531,7 @@
 	var Link = __webpack_require__(1).Link;
 	var utils = __webpack_require__(321);
 	var ChirpBox = __webpack_require__(221);
+	var FollowButton = __webpack_require__(358);
 
 
 	var UsersList = React.createClass({displayName: "UsersList",
@@ -42557,7 +42558,11 @@
 				return user.cid !== this.state.user.cid;
 
 			}.bind(this)).map(function(user){
-				return React.createElement(ChirpBox, {user: user, key: user.cid}, "buttons")
+				return (
+					React.createElement(ChirpBox, {user: user, key: user.cid}, 
+						React.createElement(FollowButton, {userId: user.cid})
+					)
+				)
 			});
 			return (
 				React.createElement("ul", {className: "b-userslist row"}, 
@@ -42611,8 +42616,19 @@
 			post('/api/chirps', {text: text}).then(function(data){
 				actions.chirped(data);
 			});
+		},
+		follow: function(userId){
+			post('/api/follow/'+userId).then(function(data){
+				actions.followed(data);
+			});
+
+		},
+		unfollow: function(userId){
+			post('/api/unfollow/'+userId).then(function(data){
+				actions.unfollowed(data);
+			});
 		}
-	}
+	};
 
 	function get(url){
 		return fetch(url,{
@@ -42643,8 +42659,66 @@
 			case constants.CHIRP:
 				API.saveChirp(action.data);
 				break;
+
+			case constants.FOLLOW:
+				API.follow(action.data);
+				break;
+
+			case constants.UNFOLLOW:
+				API.unfollow(action.data);
+				break;
 		}
-	})
+	});
+
+/***/ },
+/* 358 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(5),
+		actions = __webpack_require__(344),
+		UsersStore = __webpack_require__(356);
+
+
+	var FollowButton = React.createClass({displayName: "FollowButton",
+		getInitialState: function(){
+			return{
+				id: UsersStore.currentUser.id,
+				currentlyFollowing: UsersStore.currentUser.following
+			}
+		},
+		componentWillInmount: function(){
+			UsersStore.removeChangeListener(this.onChange);
+		},
+		componentDidMount:function(){
+			UsersStore.addChangeListener(this.onChange);
+
+		},
+		onChange:function(){
+			if(this.isMounted()){
+				this.setState(this.getInitialState());
+			}
+		},
+		render : function(){
+			if(this.state.id === this.props.userId) return React.createElement("span", null, "This is you!");
+			var text, action;
+			if(this.state.currentlyFollowing.indexOf(this.props.userId) > -1){
+				text = 'Unfollow';
+				action = this.unfollow;
+			}else{
+				text = 'Follow';
+				action = this.follow;
+			}
+			return React.createElement("button", {onClick: action}, text)
+		},
+		follow: function(){
+			actions.follow(this.props.userId);
+		},
+		unfollow: function(){
+			actions.unfollow(this.props.userId);
+		}
+	});
+	module.exports = FollowButton;
+
 
 /***/ }
 /******/ ]);
