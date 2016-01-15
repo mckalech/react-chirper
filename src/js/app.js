@@ -10,8 +10,8 @@ var ReactDOM = require('react-dom'),
 	UsersList = require('./components/usersList'); 
 var API = require('./api');
 
-API.fetchChirps();
-API.fetchUsers();
+API.startFetchingChirps();
+API.startFetchingUsers();
 
 ReactDOM.render(
 	(

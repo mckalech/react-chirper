@@ -4,10 +4,18 @@ var constants = require('./constants');
 
 var API = module.exports = {
 	fetchChirps: function(){
-		get('/api/chirps').then(actions.gotChirps)
+		get('/api/chirps').then(actions.gotChirps);
 	},
 	fetchUsers: function(){
-		get('/api/users').then(actions.gotUsers)
+		get('/api/users').then(actions.gotUsers);
+	},
+	startFetchingChirps:function(){
+		this.fetchChirps();
+		return setInterval(this.fetchChirps, 1000);
+	},
+	startFetchingUsers:function(){
+		this.fetchUsers();
+		return setInterval(this.fetchUsers, 5000);
 	},
 	saveChirp: function(text){
 		text = text.trim();

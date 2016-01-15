@@ -56,8 +56,8 @@
 		UsersList = __webpack_require__(355); 
 	var API = __webpack_require__(357);
 
-	API.fetchChirps();
-	API.fetchUsers();
+	API.startFetchingChirps();
+	API.startFetchingUsers();
 
 	ReactDOM.render(
 		(
@@ -42594,10 +42594,18 @@
 
 	var API = module.exports = {
 		fetchChirps: function(){
-			get('/api/chirps').then(actions.gotChirps)
+			get('/api/chirps').then(actions.gotChirps);
 		},
 		fetchUsers: function(){
-			get('/api/users').then(actions.gotUsers)
+			get('/api/users').then(actions.gotUsers);
+		},
+		startFetchingChirps:function(){
+			this.fetchChirps();
+			return setInterval(this.fetchChirps, 1000);
+		},
+		startFetchingUsers:function(){
+			this.fetchUsers();
+			return setInterval(this.fetchUsers, 5000);
 		},
 		saveChirp: function(text){
 			text = text.trim();
