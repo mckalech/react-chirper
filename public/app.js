@@ -52,7 +52,7 @@
 		React = __webpack_require__(5),
 		Box = __webpack_require__(209),
 		Feed = __webpack_require__(214),
-		About = __webpack_require__(354),
+		UserProfile = __webpack_require__(359),
 		UsersList = __webpack_require__(355); 
 	var API = __webpack_require__(357);
 
@@ -64,9 +64,8 @@
 			React.createElement(Router, {history: history}, 
 				React.createElement(Route, {path: "/", component: Box}, 
 					React.createElement(IndexRoute, {component: Feed}), 
-					React.createElement(Route, {path: "about", component: About}), 
 					React.createElement(Route, {path: "users", component: UsersList}), 
-					React.createElement(Route, {path: "user/:id", component: About})
+					React.createElement(Route, {path: "user/:id", component: UserProfile})
 				)
 				
 			)
@@ -24331,8 +24330,6 @@
 	                        React.createElement("br", null), 
 							React.createElement(Link, {to: "/users"}, "Users"), 
 		                    React.createElement("br", null), 
-							React.createElement(Link, {to: "/about"}, "About"), 
-		                    React.createElement("br", null), 
 							React.createElement("a", {href: "/logout"}, "Logout")
 	                    ), 
 
@@ -25066,7 +25063,7 @@
 
 			return (
 				React.createElement("li", {className: "b-chirpbox row"}, 
-					React.createElement(Link, {className: "two columns", to: '/user/'+user.userId}, 
+					React.createElement(Link, {className: "two columns", to: 'user/'+id}, 
 						React.createElement("img", {src: utils.avatar(user.email)})
 					), 
 					React.createElement("div", {className: "ten columns"}, 
@@ -42085,6 +42082,11 @@
 			return this._data.filter(function(chirp){
 				return ids.indexOf(chirp.userId) >= 0;
 			})
+		},
+		getByUserId: function(userId){
+			return this._data.filter(function(chirp){
+				return chirp.userId === userId;
+			})
 		}
 	});
 
@@ -42094,6 +42096,7 @@
 
 	var assign = __webpack_require__(352);
 	var EventEmitterProto = __webpack_require__(353).EventEmitter.prototype;
+	EventEmitterProto._maxListeners = 0;
 	var CHANGE_EVENT = "CHANGE";
 	var dispatcher = __webpack_require__(345);
 
@@ -42516,24 +42519,7 @@
 
 
 /***/ },
-/* 354 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(5);
-
-	var About = React.createClass({displayName: "About",
-		render : function(){
-			return (
-				React.createElement("div", null, 
-					"About text"
-				)
-			)
-		}
-	});
-	module.exports = About;
-
-
-/***/ },
+/* 354 */,
 /* 355 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -42694,7 +42680,7 @@
 	var FollowButton = React.createClass({displayName: "FollowButton",
 		getInitialState: function(){
 			return{
-				id: UsersStore.currentUser.id,
+				id: UsersStore.currentUser.cid,
 				currentlyFollowing: UsersStore.currentUser.following
 			}
 		},
@@ -42730,6 +42716,63 @@
 		}
 	});
 	module.exports = FollowButton;
+
+
+/***/ },
+/* 359 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(5);
+	var ChirpStore = __webpack_require__(350);
+	var UsersStore = __webpack_require__(356);
+	var utils = __webpack_require__(321);
+	var FollowButton = __webpack_require__(358);
+
+
+	var UserProfile = React.createClass({displayName: "UserProfile",
+		getInitialState:function(){
+			var id = parseInt(this.props.params.id, 10);
+			return {
+				user: UsersStore.get(id) || {},
+				chirps: ChirpStore.getByUserId(id)
+			}
+		},
+		componentWillInmount: function(){
+			UsersStore.removeChangeListener(this.onChange);
+			ChirpStore.removeChangeListener(this.onChange);
+		},
+		componentDidMount:function(){
+			UsersStore.addChangeListener(this.onChange);
+			ChirpStore.addChangeListener(this.onChange);
+
+		},
+		onChange:function(){
+			if(this.isMounted()){
+				this.setState(this.getInitialState());
+			}
+		},
+		render: function () {
+	        var chirps = this.state.chirps.map(function (chirp) {
+	            return React.createElement("li", {key: chirp.cid}, " ", chirp.text, " ");
+	        });
+
+	        return (React.createElement("div", null, 
+	            React.createElement("img", {className: "two columns", src: utils.avatar(this.state.user.email)}), 
+	            React.createElement("div", {className: "ten columns"}, 
+
+	                React.createElement("h1", null, " ", this.state.user.fullname, " "), 
+	                React.createElement("h3", {className: "timestamp"}, " @", this.state.user.username, " "), 
+
+	                React.createElement("p", null, " ", React.createElement(FollowButton, {userId: this.state.user.cid}), " "), 
+	                React.createElement("ul", null, 
+	                    chirps
+	                )
+	            )
+	        ));
+	    }
+	});
+
+	module.exports = UserProfile;
 
 
 /***/ }

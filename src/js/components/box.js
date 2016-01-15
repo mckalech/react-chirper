@@ -15,8 +15,6 @@ var Box = React.createClass({
                         <br />
 						<Link to="/users">Users</Link>
 	                    <br />
-						<Link to="/about">About</Link>
-	                    <br />
 						<a href='/logout'>Logout</a>
                     </div>
 

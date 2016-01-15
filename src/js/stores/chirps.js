@@ -13,5 +13,10 @@ var ChirpStore = module.exports = require('./store').extend({
 		return this._data.filter(function(chirp){
 			return ids.indexOf(chirp.userId) >= 0;
 		})
+	},
+	getByUserId: function(userId){
+		return this._data.filter(function(chirp){
+			return chirp.userId === userId;
+		})
 	}
 });

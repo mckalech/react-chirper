@@ -6,7 +6,7 @@ var React = require('react'),
 var FollowButton = React.createClass({
 	getInitialState: function(){
 		return{
-			id: UsersStore.currentUser.id,
+			id: UsersStore.currentUser.cid,
 			currentlyFollowing: UsersStore.currentUser.following
 		}
 	},

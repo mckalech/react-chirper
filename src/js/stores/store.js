@@ -1,5 +1,6 @@
 var assign = require('object-assign');
 var EventEmitterProto = require('events').EventEmitter.prototype;
+EventEmitterProto._maxListeners = 0;
 var CHANGE_EVENT = "CHANGE";
 var dispatcher = require('../dispatcher');
 
