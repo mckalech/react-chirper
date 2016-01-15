@@ -14,13 +14,7 @@ var UsersList = React.createClass({
 			user: UsersStore.currentUser
 		}
 	},
-	componentWillInmount: function(){
-		UsersStore.removeChangeListener(this.onChange);
-	},
-	componentDidMount:function(){
-		UsersStore.addChangeListener(this.onChange);
-		
-	},
+	mixins:[UsersStore.mixin()],
 	onChange:function(){
 		if(this.isMounted()){
 			this.setState(this.getInitialState());

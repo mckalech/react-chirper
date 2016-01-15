@@ -3,11 +3,6 @@ var ChirpBox = require('./chirpBox');
 var moment = require('moment');
 
 var ChirpsList = React.createClass({
-	getInitialState:function(){
-		return {
-
-		}
-	},
 	render : function(){
 		var items = this.props.chirps.map(function(chirp){
 			return (<ChirpBox user={chirp}

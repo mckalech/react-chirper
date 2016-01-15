@@ -11,13 +11,7 @@ var Feed = React.createClass({
 			chirps: ChirpsStore.timeline()
 		}
 	},
-	componentWillInmount: function(){
-		ChirpsStore.removeChangeListener(this.onChange);
-	},
-	componentDidMount:function(){
-		ChirpsStore.addChangeListener(this.onChange);
-		
-	},
+	mixins:[ChirpsStore.mixin()],
 	onChange:function(){
 		if(this.isMounted()){
 			this.setState(this.getInitialState());

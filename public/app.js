@@ -24711,13 +24711,7 @@
 				chirps: ChirpsStore.timeline()
 			}
 		},
-		componentWillInmount: function(){
-			ChirpsStore.removeChangeListener(this.onChange);
-		},
-		componentDidMount:function(){
-			ChirpsStore.addChangeListener(this.onChange);
-			
-		},
+		mixins:[ChirpsStore.mixin()],
 		onChange:function(){
 			if(this.isMounted()){
 				this.setState(this.getInitialState());
@@ -25019,11 +25013,6 @@
 	var moment = __webpack_require__(222);
 
 	var ChirpsList = React.createClass({displayName: "ChirpsList",
-		getInitialState:function(){
-			return {
-
-			}
-		},
 		render : function(){
 			var items = this.props.chirps.map(function(chirp){
 				return (React.createElement(ChirpBox, {user: chirp, 
@@ -42145,10 +42134,29 @@
 			}
 		}
 	};
+
+	var num = 1;
+
 	exports.extend = function(methods) {
 		var store = {
 			_data: [],
-			actions: {}
+			actions: {},
+			mixin: function () {
+	            var n = num++;
+	            var obj = {
+	                componentDidMount: function () {
+	                    store.addChangeListener(this['onChange' + n]);
+	                },
+	                componentWillUnmount: function () {
+	                    store.removeChangeListener(this['onChange' + n]);
+	                }
+	            };
+
+	            obj['onChange' + n] = function () {
+	                this.setState(this.getInitialState());
+	            };
+	            return obj;
+	        }
 		};
 
 		assign(store, EventEmitterProto, storeMethods, methods);
@@ -42539,13 +42547,7 @@
 				user: UsersStore.currentUser
 			}
 		},
-		componentWillInmount: function(){
-			UsersStore.removeChangeListener(this.onChange);
-		},
-		componentDidMount:function(){
-			UsersStore.addChangeListener(this.onChange);
-			
-		},
+		mixins:[UsersStore.mixin()],
 		onChange:function(){
 			if(this.isMounted()){
 				this.setState(this.getInitialState());
@@ -42684,13 +42686,7 @@
 				currentlyFollowing: UsersStore.currentUser.following
 			}
 		},
-		componentWillInmount: function(){
-			UsersStore.removeChangeListener(this.onChange);
-		},
-		componentDidMount:function(){
-			UsersStore.addChangeListener(this.onChange);
-
-		},
+		mixins:[UsersStore.mixin()],
 		onChange:function(){
 			if(this.isMounted()){
 				this.setState(this.getInitialState());
@@ -42737,15 +42733,7 @@
 				chirps: ChirpStore.getByUserId(id)
 			}
 		},
-		componentWillInmount: function(){
-			UsersStore.removeChangeListener(this.onChange);
-			ChirpStore.removeChangeListener(this.onChange);
-		},
-		componentDidMount:function(){
-			UsersStore.addChangeListener(this.onChange);
-			ChirpStore.addChangeListener(this.onChange);
-
-		},
+		mixins:[ChirpStore.mixin(), UsersStore.mixin()],
 		onChange:function(){
 			if(this.isMounted()){
 				this.setState(this.getInitialState());

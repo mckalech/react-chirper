@@ -49,10 +49,29 @@ var storeMethods = {
 		}
 	}
 };
+
+var num = 1;
+
 exports.extend = function(methods) {
 	var store = {
 		_data: [],
-		actions: {}
+		actions: {},
+		mixin: function () {
+            var n = num++;
+            var obj = {
+                componentDidMount: function () {
+                    store.addChangeListener(this['onChange' + n]);
+                },
+                componentWillUnmount: function () {
+                    store.removeChangeListener(this['onChange' + n]);
+                }
+            };
+
+            obj['onChange' + n] = function () {
+                this.setState(this.getInitialState());
+            };
+            return obj;
+        }
 	};
 
 	assign(store, EventEmitterProto, storeMethods, methods);

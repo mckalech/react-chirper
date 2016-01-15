@@ -13,15 +13,7 @@ var UserProfile = React.createClass({
 			chirps: ChirpStore.getByUserId(id)
 		}
 	},
-	componentWillInmount: function(){
-		UsersStore.removeChangeListener(this.onChange);
-		ChirpStore.removeChangeListener(this.onChange);
-	},
-	componentDidMount:function(){
-		UsersStore.addChangeListener(this.onChange);
-		ChirpStore.addChangeListener(this.onChange);
-
-	},
+	mixins:[ChirpStore.mixin(), UsersStore.mixin()],
 	onChange:function(){
 		if(this.isMounted()){
 			this.setState(this.getInitialState());
