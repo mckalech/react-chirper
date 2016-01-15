@@ -24712,12 +24712,6 @@
 			}
 		},
 		mixins:[ChirpsStore.mixin()],
-		onChange:function(){
-			if(this.isMounted()){
-				this.setState(this.getInitialState());
-			}
-			
-		},
 		render : function(){
 			return (
 				React.createElement("div", null, 
@@ -25052,7 +25046,7 @@
 
 			return (
 				React.createElement("li", {className: "b-chirpbox row"}, 
-					React.createElement(Link, {className: "two columns", to: 'user/'+id}, 
+					React.createElement(Link, {className: "two columns", to: '/user/'+id}, 
 						React.createElement("img", {src: utils.avatar(user.email)})
 					), 
 					React.createElement("div", {className: "ten columns"}, 
@@ -42548,11 +42542,6 @@
 			}
 		},
 		mixins:[UsersStore.mixin()],
-		onChange:function(){
-			if(this.isMounted()){
-				this.setState(this.getInitialState());
-			}
-		},
 		render : function(){
 			var items = this.state.users.filter(function(user){
 				return user.cid !== this.state.user.cid;
@@ -42687,11 +42676,6 @@
 			}
 		},
 		mixins:[UsersStore.mixin()],
-		onChange:function(){
-			if(this.isMounted()){
-				this.setState(this.getInitialState());
-			}
-		},
 		render : function(){
 			if(this.state.id === this.props.userId) return React.createElement("span", null, "This is you!");
 			var text, action;
@@ -42723,6 +42707,7 @@
 	var UsersStore = __webpack_require__(356);
 	var utils = __webpack_require__(321);
 	var FollowButton = __webpack_require__(358);
+	var ChirpsList = __webpack_require__(220);
 
 
 	var UserProfile = React.createClass({displayName: "UserProfile",
@@ -42734,15 +42719,7 @@
 			}
 		},
 		mixins:[ChirpStore.mixin(), UsersStore.mixin()],
-		onChange:function(){
-			if(this.isMounted()){
-				this.setState(this.getInitialState());
-			}
-		},
 		render: function () {
-	        var chirps = this.state.chirps.map(function (chirp) {
-	            return React.createElement("li", {key: chirp.cid}, " ", chirp.text, " ");
-	        });
 
 	        return (React.createElement("div", null, 
 	            React.createElement("img", {className: "two columns", src: utils.avatar(this.state.user.email)}), 
@@ -42752,9 +42729,7 @@
 	                React.createElement("h3", {className: "timestamp"}, " @", this.state.user.username, " "), 
 
 	                React.createElement("p", null, " ", React.createElement(FollowButton, {userId: this.state.user.cid}), " "), 
-	                React.createElement("ul", null, 
-	                    chirps
-	                )
+	                React.createElement(ChirpsList, {chirps: this.state.chirps})
 	            )
 	        ));
 	    }

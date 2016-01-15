@@ -11,11 +11,6 @@ var FollowButton = React.createClass({
 		}
 	},
 	mixins:[UsersStore.mixin()],
-	onChange:function(){
-		if(this.isMounted()){
-			this.setState(this.getInitialState());
-		}
-	},
 	render : function(){
 		if(this.state.id === this.props.userId) return <span>This is you!</span>;
 		var text, action;

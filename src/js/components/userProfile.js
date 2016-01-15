@@ -3,6 +3,7 @@ var ChirpStore = require('../stores/chirps');
 var UsersStore = require('../stores/users');
 var utils = require('../utils');
 var FollowButton = require('./followButton');
+var ChirpsList = require('./chirpsList');
 
 
 var UserProfile = React.createClass({
@@ -14,15 +15,7 @@ var UserProfile = React.createClass({
 		}
 	},
 	mixins:[ChirpStore.mixin(), UsersStore.mixin()],
-	onChange:function(){
-		if(this.isMounted()){
-			this.setState(this.getInitialState());
-		}
-	},
 	render: function () {
-        var chirps = this.state.chirps.map(function (chirp) {
-            return <li key={chirp.cid}> {chirp.text} </li>;
-        });
 
         return (<div>
             <img className='two columns' src={utils.avatar(this.state.user.email)} />
@@ -32,9 +25,7 @@ var UserProfile = React.createClass({
                 <h3 className='timestamp'> @{this.state.user.username} </h3>
 
                 <p> <FollowButton userId={this.state.user.cid} /> </p>
-                <ul>
-                    {chirps}
-                </ul>
+                <ChirpsList chirps={this.state.chirps}/>
             </div>
         </div>);
     }

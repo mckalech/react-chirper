@@ -12,12 +12,6 @@ var Feed = React.createClass({
 		}
 	},
 	mixins:[ChirpsStore.mixin()],
-	onChange:function(){
-		if(this.isMounted()){
-			this.setState(this.getInitialState());
-		}
-		
-	},
 	render : function(){
 		return (
 			<div>

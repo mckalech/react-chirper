@@ -12,7 +12,7 @@ var ChirpBox = React.createClass({
 
 		return (
 			<li className="b-chirpbox row">
-				<Link className="two columns" to={'user/'+id}>
+				<Link className="two columns" to={'/user/'+id}>
 					<img src={utils.avatar(user.email)} />
 				</Link>
 				<div className="ten columns">

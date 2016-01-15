@@ -15,11 +15,6 @@ var UsersList = React.createClass({
 		}
 	},
 	mixins:[UsersStore.mixin()],
-	onChange:function(){
-		if(this.isMounted()){
-			this.setState(this.getInitialState());
-		}
-	},
 	render : function(){
 		var items = this.state.users.filter(function(user){
 			return user.cid !== this.state.user.cid;
