@@ -30,11 +30,9 @@ class Feed extends Component {
 
 function selectChirps(chirps, currentUser) {
 	var ids = [currentUser.cid].concat(currentUser.following);
-	chirps = chirps.filter(function(chirp){
+	return chirps.filter(function(chirp){
 		return ids.indexOf(chirp.userId) >= 0;
-	});
-
-	return chirps.sort(function (a, b) {
+	}).sort(function (a, b) {
             return +new Date(b.$created) - +new Date(a.$created);
 	});
 }

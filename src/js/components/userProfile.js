@@ -29,6 +29,8 @@ class UserProfile extends Component {
 function getChirpsByUserId(chirps, userId){
 	return chirps.filter(function(chirp){
 		return chirp.userId === userId;
+	}).sort(function (a, b) {
+            return +new Date(b.$created) - +new Date(a.$created);
 	});
 }
 
