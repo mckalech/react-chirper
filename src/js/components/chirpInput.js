@@ -1,35 +1,38 @@
-var React = require('react');
-var LinkedStateMixin = require('react-addons-linked-state-mixin'); 
+import React, { Component } from 'react';
 
 
-var ChirpInput = React.createClass({
-	mixins: [LinkedStateMixin],
-	getInitialState:function(){
-		return {
+export default class ChirpInput extends Component {
+	constructor(props){
+		super(props);
+		this.handleClick = this.handleClick.bind(this);
+		this.state =  {
 			value: ''
 		}
-	},
-	render : function(){
+	}
+	render(){
 		return (
 			<div className="b-chirpinput row">
-				<div className="b-chirpinput__input nine columns">
+				<div className="b-chirpinput__input six columns">
 					<input 
-						valueLink={this.linkState('value')} 
+						onChange={e=>this.setState({value: e.target.value})}
+						value={this.state.value}
 						className='u-full-width' 
 						placeholder='Say Something!'
 						type='text'/>
 				</div>
-				<div className="b-chirpinput__btn three columns">		
+				<div className="b-chirpinput__btn three columns">
 					<button className='u-full-width button-primary' onClick={this.handleClick}>Chirp!</button>
+				</div>
+				<div className="b-chirpinput__btn three columns">
+					<button className='u-full-width button' onClick={()=>this.props.onUpdate()}>Update!</button>
 				</div>
 
 			</div>
 		)
-	},
-	handleClick:function(){
+	}
+	handleClick(){
 		this.props.onSave(this.state.value);
 		this.setState({value:''});
 	}
-});
+}
 
-module.exports = ChirpInput;

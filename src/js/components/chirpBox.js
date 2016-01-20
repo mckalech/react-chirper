@@ -1,9 +1,9 @@
-var React = require('react');
-var utils = require('../utils');
-var Link = require('react-router').Link;
+import React, { Component } from 'react';
+import utils from '../utils'
+import  { Link } from 'react-router';
 
-var ChirpBox = React.createClass({
-	render : function(){
+export default class ChirpBox extends Component {
+	render(){
 		var user = this.props.user;
 		var timestamp = this.props.timestamp ?
             ' ' + String.fromCharCode(8226) + ' ' + this.props.timestamp :
@@ -27,6 +27,5 @@ var ChirpBox = React.createClass({
 			</li>
 		)
 	}
-});
+}
 
-module.exports = ChirpBox;

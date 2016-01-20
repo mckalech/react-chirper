@@ -1,27 +1,51 @@
-var React = require('react');
-var ChirpInput = require('./chirpInput');
-var ChirpsList= require('./chirpsList');
-var actions = require('../actions');
-var ChirpsStore = require('../stores/chirps');
+import React, { Component } from 'react';
+import ChirpInput from './chirpInput'
+import ChirpsList from './chirpsList'
+import { connect } from 'react-redux';
+import { postChirp, fetchChirps } from '../actions';
 
-
-var Feed = React.createClass({
-	getInitialState:function(){
-		return {
-			chirps: ChirpsStore.timeline()
-		}
-	},
-	mixins:[ChirpsStore.mixin()],
-	render : function(){
+class Feed extends Component {
+	componentDidMount() {
+            this.props.dispatch(fetchChirps());
+    }
+	render() {
+		const { dispatch, visibleChirps, isFetching } = this.props;
 		return (
 			<div>
-				<ChirpInput onSave={this.saveChirp}/>
-				<ChirpsList chirps={this.state.chirps}/>
+				<ChirpInput
+					onSave={text =>
+                        dispatch(postChirp(text))
+                    }
+					onUpdate={()=>
+						dispatch(fetchChirps())
+					}/>
+				<div className="b-fetching-status">
+					{isFetching ? 'Fetching...' : ''}
+				</div>
+				<ChirpsList chirps={visibleChirps}/>
 			</div>
 		)
-	},
-	saveChirp:function(text){
-		actions.chirp(text);
 	}
-});
-module.exports = Feed;
+}
+
+function selectChirps(chirps, currentUser) {
+	var ids = [currentUser.cid].concat(currentUser.following);
+	chirps = chirps.filter(function(chirp){
+		return ids.indexOf(chirp.userId) >= 0;
+	});
+
+	return chirps.sort(function (a, b) {
+            return +new Date(b.$created) - +new Date(a.$created);
+	});
+}
+
+function mapStateToProps(state) {
+	const {chirps, isFetching, currentUser} = state;
+	return {
+		visibleChirps: selectChirps(chirps, currentUser),
+		isFetching
+	};
+}
+
+
+export default connect(mapStateToProps)(Feed);

@@ -1,34 +1,51 @@
-var React = require('react');
-var ChirpStore = require('../stores/chirps');
-var UsersStore = require('../stores/users');
-var utils = require('../utils');
-var FollowButton = require('./followButton');
-var ChirpsList = require('./chirpsList');
+import React, { Component } from 'react';
+import utils from '../utils'
+import ChirpsList from './chirpsList'
+import { fetchUsers, fetchChirps } from '../actions';
+import { connect } from 'react-redux';
+import FollowButton from './followButton'
 
-
-var UserProfile = React.createClass({
-	getInitialState:function(){
-		var id = parseInt(this.props.params.id, 10);
-		return {
-			user: UsersStore.get(id) || {},
-			chirps: ChirpStore.getByUserId(id)
-		}
-	},
-	mixins:[ChirpStore.mixin(), UsersStore.mixin()],
-	render: function () {
-
+class UserProfile extends Component {
+	componentDidMount() {
+		this.props.dispatch(fetchChirps());
+		this.props.dispatch(fetchUsers());
+    }
+	render(){
+		let user = this.props.user || {};
         return (<div>
-            <img className='two columns' src={utils.avatar(this.state.user.email)} />
+            <img className='two columns' src={utils.avatar(user.email)} />
             <div className='ten columns'>
 
-                <h1> {this.state.user.fullname} </h1>
-                <h3 className='timestamp'> @{this.state.user.username} </h3>
+                <h1> {user.fullname} </h1>
+                <h3 className='timestamp'> @{user.username} </h3>
 
-                <p> <FollowButton userId={this.state.user.cid} /> </p>
-                <ChirpsList chirps={this.state.chirps}/>
+				<p> <FollowButton userId={user.cid} /> </p>
+                <ChirpsList chirps={this.props.chirps}/>
             </div>
         </div>);
     }
-});
+}
 
-module.exports = UserProfile;
+function getChirpsByUserId(chirps, userId){
+	return chirps.filter(function(chirp){
+		return chirp.userId === userId;
+	});
+}
+
+function getUserById(users, id){
+	return users.filter(function(item){
+		return item.cid === id;
+	})[0];
+}
+
+function mapStateToProps(state, ownProps) {
+	const userId = parseInt(ownProps.params.id, 10);
+	let {users, chirps} = state;
+	return {
+		user: getUserById(users, userId),
+		chirps: getChirpsByUserId(chirps, userId)
+	}
+}
+
+
+export default connect(mapStateToProps)(UserProfile);

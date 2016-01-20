@@ -1,7 +1,7 @@
 var router = module.exports = require('express').Router();
 var login  = require('./login');
 
-var db = new (require('locallydb'))('./.data');
+var db = new (require('locallydb'))('./data');
 var chirps = db.collection('chirps');
 
 router.route('/api/chirps')

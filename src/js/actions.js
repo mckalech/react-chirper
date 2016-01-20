@@ -1,27 +1,84 @@
-var dispatcher = require('./dispatcher');
-var constants = require('./constants');
+import fetch from 'isomorphic-fetch';
+import constants from './constants';
+import API from './api';
 
-/*
-exporps.chirp = function(data) {
-	dispatcher.dispatch({
-		actionType: constants.CHIRP,
-		data: data
-	});
 
-}*/
+function postChirpRequest(text){
+	return { type: constants.POST_CHIRP_REQUEST};
+}
+function postChirpSuccess(chirp){
+	return { type: constants.POST_CHIRP_SUCCESS, chirp};
+}
+export function postChirp(text) {
+	return function (dispatch) {
+		text = text.trim();
+		if(text === ''){ return;}
+        dispatch(postChirpRequest());
+        return API.post('/api/chirps', {text: text})
+        .then(json =>
+		        dispatch(postChirpSuccess(json))
+        );
+  };
+}
 
-Object.keys(constants).forEach(function(key){
+function fetchChirpsRequest(){
+	return { type: constants.FETCH_CHIRPS_REQUEST};
+}
+function fetchChirpsSuccess(chirps){
+	return { type: constants.FETCH_CHIRPS_SUCCESS, chirps}
+}
+export function fetchChirps() {
+	return function (dispatch) {
+        dispatch(fetchChirpsRequest());
+        return API.get('/api/chirps')
+        .then(json =>
+		        dispatch(fetchChirpsSuccess(json))
+        );
+  };
+}
 
-	var funcName = key.split('_').map(function(word, i){
-		if(i === 0) return word.toLowerCase();
-		return word[0] + word.slice(1).toLowerCase();
-	}).join('');
 
-	exports[funcName] = function(data) {
-		dispatcher.dispatch({
-			actionType: constants[key],
-			data: data
-		});
+function fetchUsersRequest(){
+	return { type: constants.FETCH_USERS_REQUEST};
+}
+function fetchUsersSuccess(users){
+	return { type: constants.FETCH_USERS_SUCCESS, users}
+}
+export function fetchUsers() {
+	return function (dispatch) {
+        dispatch(fetchUsersRequest());
+        return API.get('/api/users')
+        .then(json =>
+		        dispatch(fetchUsersSuccess(json))
+        );
+  };
+}
 
+
+function followed(user){
+	return { type: constants.FOLLOWED, user}
+}
+export function follow(userId){
+	return function (dispatch) {
+		return API.post('/api/follow/' + userId)
+		.then(json =>
+			dispatch(followed(json))
+
+		);
 	}
-});
+}
+
+
+
+function unfollowed(user){
+	return { type: constants.FOLLOWED, user}
+}
+export function unfollow(userId){
+	return function (dispatch) {
+		return API.post('/api/unfollow/' + userId)
+		.then(json =>
+			dispatch(unfollowed(json))
+
+		);
+	}
+}

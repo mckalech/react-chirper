@@ -2,7 +2,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local');
 
 var LocallyDB = require('locallydb');
-var db = new LocallyDB('./.data');
+var db = new LocallyDB('./data');
 var users = db.collection('users');
 
 var crypto = require('crypto');

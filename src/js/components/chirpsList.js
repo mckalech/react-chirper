@@ -1,9 +1,9 @@
-var React = require('react');
-var ChirpBox = require('./chirpBox');
-var moment = require('moment');
+import React, { Component } from 'react';
+import ChirpBox from './chirpBox'
+import moment from 'moment';
 
-var ChirpsList = React.createClass({
-	render : function(){
+export default class ChirpsList extends Component {
+	render(){
 		var items = this.props.chirps.map(function(chirp){
 			return (<ChirpBox user={chirp}
 			                  key={chirp.cid}
@@ -19,6 +19,5 @@ var ChirpsList = React.createClass({
 			</ul>
 		)
 	}
-});
+}
 
-module.exports = ChirpsList;

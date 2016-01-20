@@ -1,25 +1,17 @@
-var React = require('react');
-var actions = require('../actions');
-var UsersStore = require('../stores/users');
-var Link = require('react-router').Link;
-var utils = require('../utils');
-var ChirpBox = require('./chirpBox');
-var FollowButton = require('./followButton');
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import {  fetchUsers } from '../actions';
+import  { Link } from 'react-router';
+import ChirpBox from './chirpBox'
+import FollowButton from './followButton'
 
-
-var UsersList = React.createClass({
-	getInitialState:function(){
-		return {
-			users: UsersStore.all(),
-			user: UsersStore.currentUser
-		}
-	},
-	mixins:[UsersStore.mixin()],
-	render : function(){
-		var items = this.state.users.filter(function(user){
-			return user.cid !== this.state.user.cid;
-
-		}.bind(this)).map(function(user){
+class UsersList extends Component {
+	componentDidMount() {
+            this.props.dispatch(fetchUsers());
+    }
+	render(){
+		const { usersList } = this.props;
+		let items = usersList.map(function(user){
 			return (
 				<ChirpBox user={user} key={user.cid}>
 					<FollowButton userId={user.cid}/>
@@ -32,6 +24,18 @@ var UsersList = React.createClass({
 			</ul>
 		)
 	}
-});
+}
 
-module.exports = UsersList;
+function mapStateToProps(state) {
+	let {users, currentUser} = state;
+	users = users.filter(function(user){
+		return user.cid !== currentUser.cid;
+	});
+
+	return {
+		usersList: users
+	};
+}
+
+
+export default connect(mapStateToProps)(UsersList);

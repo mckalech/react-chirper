@@ -1,33 +1,32 @@
-var React = require('react'),
-	actions = require('../actions'),
-	UsersStore = require('../stores/users');
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { fetchUsers, fetchChirps } from '../actions';
+import { follow, unfollow } from '../actions';
 
 
-var FollowButton = React.createClass({
-	getInitialState: function(){
-		return{
-			id: UsersStore.currentUser.cid,
-			currentlyFollowing: UsersStore.currentUser.following
-		}
-	},
-	mixins:[UsersStore.mixin()],
-	render : function(){
-		if(this.state.id === this.props.userId) return <span>This is you!</span>;
-		var text, action;
-		if(this.state.currentlyFollowing.indexOf(this.props.userId) > -1){
-			text = 'Unfollow';
-			action = this.unfollow;
+class FollowButton extends Component {
+	render(){
+		if(this.props.id === this.props.userId) return <span>This is you!</span>;
+		if(this.props.currentlyFollowing.indexOf(this.props.userId) > -1){
+			return <button onClick={()=>this.unfollowClick()}>Unfollow</button>
 		}else{
-			text = 'Follow';
-			action = this.follow;
+			return <button onClick={()=>this.followClick()}>Follow</button>
 		}
-		return <button onClick={action}>{text}</button>
-	},
-	follow: function(){
-		actions.follow(this.props.userId);
-	},
-	unfollow: function(){
-		actions.unfollow(this.props.userId);
 	}
-});
-module.exports = FollowButton;
+	followClick(){
+		this.props.dispatch(follow(this.props.userId));
+	}
+	unfollowClick(){
+		this.props.dispatch(unfollow(this.props.userId));
+	}
+}
+
+function mapStateToProps(state) {
+	let {currentUser} = state;
+	return{
+		id: currentUser.cid,
+		currentlyFollowing: currentUser.following
+	}
+}
+
+export default connect(mapStateToProps)(FollowButton);

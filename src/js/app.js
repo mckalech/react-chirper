@@ -1,27 +1,29 @@
-var Router = require('react-router').Router;
-var Route = require('react-router').Route;
-var IndexRoute = require('react-router').IndexRoute;
-var history = require('history/lib/createBrowserHistory')();
-var ReactDOM = require('react-dom'),
-	React = require('react'),
-	Box = require('./components/box'),
-	Feed = require('./components/feed'),
-	UserProfile = require('./components/userProfile'),
-	UsersList = require('./components/usersList'); 
-var API = require('./api');
+import ReactDOM from 'react-dom';
+import React from 'react';
+import { Provider } from 'react-redux';
+import configureStore from './store';
+import {Router, Route, IndexRoute} from 'react-router';
+import createBrowserHistory from 'history/lib/createBrowserHistory'
+import Box from './components/box';
+import Feed from './components/feed';
+import UsersList from './components/usersList';
+import UserProfile from './components/userProfile';
 
-API.startFetchingChirps();
-API.startFetchingUsers();
+
+const store = configureStore();
 
 ReactDOM.render(
 	(
-		<Router history={history}>
-			<Route path="/" component={Box}>
-				<IndexRoute component={Feed} />
-				<Route path="users" component={UsersList} />
-				<Route path="user/:id" component={UserProfile} />
-			</Route>
-			
-		</Router>
+		<Provider store={store}>
+			<Router history={createBrowserHistory()}>
+				<Route path="/" component={Box}>
+					<IndexRoute component={Feed} />
+					<Route path="users" component={UsersList} />
+					<Route path="user/:id" component={UserProfile} />
+				</Route>
+
+			</Router>
+		</Provider>
 	),document.getElementById('content')
 );
+

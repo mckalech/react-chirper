@@ -1,29 +1,29 @@
-var css = require("../../styles/styles.scss"); 
-var React = require('react');
-var Link = require('react-router').Link;
+var css = require("../../styles/styles.scss");
+import React, { Component } from 'react';
+import  { Link } from 'react-router';
 
-var Box = React.createClass({
-	render : function(){
+export default class Box extends Component {
+
+	render() {
 		return (
 			<div>
 				<div className='row'>
-                    <h1> Chirper </h1>
-                </div>
-                <div className='row'>
-                    <div className='three columns'>
-                        <Link to="/">Feed</Link>
-                        <br />
+					<h1> Chirper </h1>
+				</div>
+				<div className='row'>
+					<div className='three columns'>
+						<Link to="/">Feed</Link>
+						<br />
 						<Link to="/users">Users</Link>
-	                    <br />
+						<br />
 						<a href='/logout'>Logout</a>
-                    </div>
+					</div>
 
-                    <div className='nine columns'>
-                        {this.props.children}
-                    </div>
-                </div>
-			</div>	
+					<div className='nine columns'>
+						{this.props.children}
+					</div>
+				</div>
+			</div>
 		)
 	}
-});
-module.exports = Box;
+}
